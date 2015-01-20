@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Model
+namespace Common.Services
 {
-    public class Class1
+    public interface IUserRegistration
     {
+
     }
 }
