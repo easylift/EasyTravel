@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Common.Services
+namespace Core.Infrastructure.Task
 {
-    public interface IUserRegistration
+    interface IRunOnEachRequest
     {
-
     }
 }

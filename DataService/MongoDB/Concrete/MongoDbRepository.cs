@@ -10,7 +10,7 @@ using MongoDB.Driver.Linq;
 
 namespace DataService.MongoDB.Concrete
 {
-    public class MongoDbRepository<T> : IMongoDbRepository<T> where T : EntityBase
+    public class MongoDbRepository<T> : IMongoDbRepository<T>, IDisposable where T : EntityBase
     {
         private MongoDatabase _database;
         private MongoCollection<T> _collection;
@@ -86,6 +86,11 @@ namespace DataService.MongoDB.Concrete
         {
             _collection = _database
                 .GetCollection<T>(typeof(T).Name);
+        }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
         }
     }
 }
