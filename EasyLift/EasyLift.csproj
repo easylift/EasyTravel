@@ -195,6 +195,10 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Scripts\angular-ui\ui-bootstrap-tpls.js" />
+    <Content Include="Scripts\angular-ui\ui-bootstrap-tpls.min.js" />
+    <Content Include="Scripts\angular-ui\ui-bootstrap.js" />
+    <Content Include="Scripts\angular-ui\ui-bootstrap.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Areas\API\Views\web.config" />
@@ -259,9 +263,21 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common.Services\Common.Services.csproj">
+      <Project>{27F70B47-219A-410C-9755-2EDED5D6913C}</Project>
+      <Name>Common.Services</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Core.Infrastructure\Core.Infrastructure.csproj">
       <Project>{8F1E51D7-5C2C-4BF3-B8F8-873005E1F256}</Project>
       <Name>Core.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataService\DataService.csproj">
+      <Project>{6DC4631F-5DDC-4D22-91E5-033E503EAC8D}</Project>
+      <Name>DataService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Domain.Model\Domain.Model.csproj">
+      <Project>{7D6CE3BA-6904-4DCC-929B-FA85236FE693}</Project>
+      <Name>Domain.Model</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

@@ -1,39 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
+﻿using System.Linq;
 using System.Web.Http;
-using Antlr.Runtime;
+using Common.Services;
 using Domain.Model;
 
 namespace EasyLift.Areas.API.Controllers
 {
     public class IndividualController : ApiController
     {
-        // GET: api/Individual
-        public IEnumerable<Individual> Get()
+        private readonly IIndividualRegistration _registration;
+
+        public IndividualController(IIndividualRegistration registration )
         {
-            return new List<Individual>();
+            _registration = registration;
         }
 
-        // GET: api/Individual/5
-        public string Get(int id)
+        public IHttpActionResult Get()
         {
-            return "value";
+            var result= _registration.GetAllIndividuals().ToList();
+            return result.Count > 0 ? (IHttpActionResult) Ok(result) : NotFound();
         }
 
-        // POST: api/Individual
-        public void Post([FromBody]string value)
+        public IHttpActionResult Get(string individualRef)
+        {
+            var result =_registration.GetIndividualByReference(individualRef);
+            return result != null ? (IHttpActionResult) Ok(result) : NotFound();
+        }
+
+        public void Post([FromBody]Individual value)
         {
         }
 
-        // PUT: api/Individual/5
-        public void Put(int id, [FromBody]string value)
+        public void Put(int id, [FromBody]Individual value)
         {
         }
 
-        // DELETE: api/Individual/5
         public void Delete(int id)
         {
         }
