@@ -1,14 +1,14 @@
 ﻿using System.Web.Mvc;
 
-namespace EasyLift.Areas.API
+namespace EasyLift.Areas.MongoAreasAPI
 {
-    public class APIAreaRegistration : AreaRegistration 
+    public class MongoAreasAPIAreaRegistration : AreaRegistration 
     {
         public override string AreaName 
         {
             get 
             {
-                return "API";
+                return "MongoAreasAPI";
             }
         }
 
@@ -16,7 +16,7 @@ namespace EasyLift.Areas.API
         {
             context.MapRoute(
                 "API_default",
-                "API/{controller}/{action}/{id}",
+                "MongoAreasAPI/{controller}/{action}/{id}",
                 new { action = "Index", id = UrlParameter.Optional }
             );
         }

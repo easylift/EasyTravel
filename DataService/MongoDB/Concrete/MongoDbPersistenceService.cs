@@ -12,7 +12,7 @@ namespace DataService.MongoDB.Concrete
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            GC.SuppressFinalize(this);
         }
     }
 }

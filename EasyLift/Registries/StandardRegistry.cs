@@ -1,7 +1,7 @@
 ﻿using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 
-namespace Core.Infrastructure.Registries
+namespace EasyLift.Registries
 {
     public class StandardRegistry : Registry
     {

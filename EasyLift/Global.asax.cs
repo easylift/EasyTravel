@@ -3,7 +3,8 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-using Core.Infrastructure.Registries;
+using EasyLift.DependencyResolution;
+using EasyLift.Registries;
 using StructureMap;
 
 namespace EasyLift
@@ -17,8 +18,10 @@ namespace EasyLift
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            var container = new Container(c => c.AddRegistry<StandardRegistry>());
 
-            ObjectFactory.Configure(cfg=>cfg.AddRegistry(new StandardRegistry()));
+            DependencyResolver.SetResolver(new StructureMapDependencyScope(container));
+            DependencyResolver.SetResolver(new StructureMapWebApiDependencyScope(container));
         }
     }
 }

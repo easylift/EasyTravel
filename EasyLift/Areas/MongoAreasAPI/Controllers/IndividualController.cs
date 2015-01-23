@@ -3,8 +3,9 @@ using System.Web.Http;
 using Common.Services;
 using Domain.Model;
 
-namespace EasyLift.Areas.API.Controllers
+namespace EasyLift.Areas.MongoAreasAPI.Controllers
 {
+    [RoutePrefix("Registration")]
     public class IndividualController : ApiController
     {
         private readonly IIndividualRegistration _registration;
@@ -14,6 +15,7 @@ namespace EasyLift.Areas.API.Controllers
             _registration = registration;
         }
 
+        [HttpGet]
         public IHttpActionResult Get()
         {
             var result= _registration.GetAllIndividuals().ToList();

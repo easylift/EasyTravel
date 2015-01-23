@@ -1,7 +1,8 @@
-﻿using StructureMap.Configuration.DSL;
+﻿using Core.Infrastructure.Task;
+using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 
-namespace Core.Infrastructure.Task
+namespace EasyLift.Registries
 {
     public class TaskRegistry : Registry
     {
