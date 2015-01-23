@@ -30,5 +30,13 @@ namespace Common.Concrete
                 return repository.SearchFor(x => x.IndividualRef == individualRef).FirstOrDefault();
             }
         }
+
+        public bool SaveIndividual(Individual model)
+        {
+             using (var repository = _service.GetMongoDbRepository<Individual>())
+             {
+                 return repository.Insert(model);
+             }
+        }
     }
 }

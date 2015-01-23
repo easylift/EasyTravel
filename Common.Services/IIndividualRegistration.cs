@@ -17,5 +17,7 @@ namespace Common.Services
         /// <param name="individualRef"></param>
         /// <returns>individual</returns>
         Individual GetIndividualByReference(string individualRef);
+
+        bool SaveIndividual(Individual model);
     }
 }
