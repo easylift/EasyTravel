@@ -23,7 +23,6 @@ namespace DataService.MongoDB.Concrete
 
         public bool Insert(T entity)
         {
-            entity.Id = Guid.NewGuid();
             return _collection.Insert(entity).Ok;
         }
 

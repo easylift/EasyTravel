@@ -13,6 +13,7 @@ namespace EasyLift
     {
         protected void Application_Start()
         {
+            EnsureAuthIndexes.Exist();
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);

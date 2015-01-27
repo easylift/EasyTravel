@@ -1,9 +1,12 @@
 ﻿using System;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace DataService.MongoDB.Concrete
 {
-    public  abstract class EntityBase
+    public abstract class EntityBase
     {
-        public Guid Id { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; set; }
     }
 }

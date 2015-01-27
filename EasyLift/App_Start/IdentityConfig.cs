@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
-using System.Web;
+using Core.Infrastructure.Providers;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
-using Microsoft.Owin.Security;
 using EasyLift.Models;
 
 namespace EasyLift
@@ -40,9 +36,11 @@ namespace EasyLift
         {
         }
 
-        public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context) 
+        public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options,
+            IOwinContext context)
         {
-            var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<ApplicationDbContext>()));
+            var manager =
+                new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<ApplicationMongoContext>()));
             // Configure validation logic for usernames
             manager.UserValidator = new UserValidator<ApplicationUser>(manager)
             {
@@ -81,29 +79,60 @@ namespace EasyLift
             var dataProtectionProvider = options.DataProtectionProvider;
             if (dataProtectionProvider != null)
             {
-                manager.UserTokenProvider = 
+                manager.UserTokenProvider =
                     new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
             }
             return manager;
         }
-    }
+        
 
-    // Configure the application sign-in manager which is used in this application.
-    public class ApplicationSignInManager : SignInManager<ApplicationUser, string>
-    {
-        public ApplicationSignInManager(ApplicationUserManager userManager, IAuthenticationManager authenticationManager)
-            : base(userManager, authenticationManager)
+
+        /// <summary>
+        /// Method to add user to multiple roles
+        /// </summary>
+        /// <param name="userId">user id</param>
+        /// <param name="roles">list of role names</param>
+        /// <returns></returns>
+        public virtual async Task<IdentityResult> AddUserToRolesAsync(string userId, IList<string> roles)
         {
+            var userRoleStore = (IUserRoleStore<ApplicationUser, string>) Store;
+
+            var user = await FindByIdAsync(userId).ConfigureAwait(false);
+            if (user == null)
+            {
+                throw new InvalidOperationException("Invalid user Id");
+            }
+
+            var userRoles = await userRoleStore.GetRolesAsync(user).ConfigureAwait(false);
+            // Add user to each role using UserRoleStore
+            foreach (var role in roles.Where(role => !userRoles.Contains(role)))
+            {
+                await userRoleStore.AddToRoleAsync(user, role).ConfigureAwait(false);
+            }
+
+            // Call update once when all roles are added
+            return await UpdateAsync(user).ConfigureAwait(false);
         }
 
-        public override Task<ClaimsIdentity> CreateUserIdentityAsync(ApplicationUser user)
+        public virtual async Task<IdentityResult> RemoveUserFromRolesAsync(string userId, IList<string> roles)
         {
-            return user.GenerateUserIdentityAsync((ApplicationUserManager)UserManager);
-        }
+            var userRoleStore = (IUserRoleStore<ApplicationUser, string>)Store;
 
-        public static ApplicationSignInManager Create(IdentityFactoryOptions<ApplicationSignInManager> options, IOwinContext context)
-        {
-            return new ApplicationSignInManager(context.GetUserManager<ApplicationUserManager>(), context.Authentication);
+            var user = await FindByIdAsync(userId).ConfigureAwait(false);
+            if (user == null)
+            {
+                throw new InvalidOperationException("Invalid user Id");
+            }
+
+            var userRoles = await userRoleStore.GetRolesAsync(user).ConfigureAwait(false);
+            // Remove user to each role using UserRoleStore
+            foreach (var role in roles.Where(userRoles.Contains))
+            {
+                await userRoleStore.RemoveFromRoleAsync(user, role).ConfigureAwait(false);
+            }
+
+            // Call update once when all roles are removed
+            return await UpdateAsync(user).ConfigureAwait(false);
         }
     }
 }
