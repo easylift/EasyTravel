@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Domain.Model;
+using EasyLift.Mapping;
 
 namespace EasyLift.Models
 {
@@ -108,5 +111,26 @@ namespace EasyLift.Models
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
+    }
+
+    public class RegisterModel : RegisterViewModel, ICustomMapping
+    {
+        public string IndividualRef { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Gender { get; set; }
+        public DateTime DateOfBirth { get; set; }
+        public string Username { get; set; }
+
+        public void CreateMappings(AutoMapper.IConfiguration configuration)
+        {
+            configuration.CreateMap<RegisterModel, Individual>()
+                .ForMember(x => x.DateOfBirth, opt => opt.MapFrom(d => d.DateOfBirth))
+                .ForMember(x => x.FirstName, opt => opt.MapFrom(d => d.FirstName))
+                .ForMember(x => x.LastName, opt => opt.MapFrom(d => d.LastName))
+                .ForMember(x => x.Gender, opt => opt.MapFrom(d => d.Gender))
+                .ForMember(x => x.Username, opt => opt.MapFrom(d => d.Username))
+                .ForMember(x => x.IndividualRef, opt => opt.MapFrom(d => d.IndividualRef));
+        }
     }
 }

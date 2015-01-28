@@ -15,7 +15,7 @@ namespace EasyLift.Controllers
             _registration = registration;
         }
 
-        public ActionResult Individual()
+        public ActionResult Index()
    {
             var result= _registration.GetAllIndividuals().ToList();
             return result.Count > 0 ? View(result) : View(new List<Individual>());

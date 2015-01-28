@@ -1,7 +1,10 @@
 ﻿using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Common.Services;
+using Domain.Model;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
@@ -12,6 +15,7 @@ namespace EasyLift.Controllers
     [Authorize]
     public class AccountController : Controller
     {
+        private readonly IIndividualRegistration _individualRegistration;
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
@@ -19,8 +23,9 @@ namespace EasyLift.Controllers
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, IIndividualRegistration individualRegistration)
         {
+            _individualRegistration = individualRegistration;
             UserManager = userManager;
             SignInManager = signInManager;
         }
@@ -149,7 +154,7 @@ namespace EasyLift.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
+        public async Task<ActionResult> Register(RegisterModel model)
         {
             if (ModelState.IsValid)
             {
@@ -158,7 +163,9 @@ namespace EasyLift.Controllers
                 if (result.Succeeded)
                 {
                     await SignInManager.SignInAsync(user, false, false);
-                    
+                  AutoMapper.Mapper.CreateMap<RegisterModel, Individual>();
+                    var individual=AutoMapper.Mapper.Map<RegisterModel, Individual>(model);
+                    _individualRegistration.SaveIndividual(individual);
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
